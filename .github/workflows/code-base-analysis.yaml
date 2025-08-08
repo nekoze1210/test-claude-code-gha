@@ -29,14 +29,10 @@ jobs:
             **Issue番号:** ${{ github.event.issue.number }}  
             **リポジトリ:** ${{ github.repository }}  
         
-            分析完了後、以下のcurlコマンドでGitHub APIを使ってIssueにコメントしてください：  
-        
+            分析完了後、以下のコマンドを使ってIssueにコメントしてください：  
+
             ```bash  
-            curl -X POST \  
-              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \  
-              -H "Accept: application/vnd.github.v3+json" \  
-              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments \  
-              -d '{"body": "あなたの分析結果をここに記述"}'  
+            gh issue comment ${{ github.event.issue.number }} --body "分析結果をここに記述" --repo ${{ github.repository }}
             ```  
 
             ## 分析してほしい内容

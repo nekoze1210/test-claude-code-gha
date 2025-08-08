@@ -18,7 +18,7 @@ jobs:
         id: claude-analysis
         uses: anthropics/claude-code-base-action@beta
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
             GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。  
   

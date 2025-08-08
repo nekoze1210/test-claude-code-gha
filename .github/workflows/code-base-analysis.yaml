@@ -18,15 +18,25 @@ jobs:
         id: claude-analysis
         uses: anthropics/claude-code-base-action@beta
         with:
-          claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立て、コメントに回答してください。
-
-            ## Issue 情報
-            **タイトル:** ${{ github.event.issue.title }}
-            
-            **説明:**
-            ${{ github.event.issue.body }}
+            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。  
+  
+            ## Issue 情報  
+            **タイトル:** ${{ github.event.issue.title }}  
+            **説明:** ${{ github.event.issue.body }}  
+            **Issue番号:** ${{ github.event.issue.number }}  
+            **リポジトリ:** ${{ github.repository }}  
+        
+            分析完了後、以下のcurlコマンドでGitHub APIを使ってIssueにコメントしてください：  
+        
+            ```bash  
+            curl -X POST \  
+              -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \  
+              -H "Accept: application/vnd.github.v3+json" \  
+              https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.issue.number }}/comments \  
+              -d '{"body": "あなたの分析結果をここに記述"}'  
+            ```  
 
             ## 分析してほしい内容
             1. **Issue の分類と優先度評価**
@@ -54,18 +64,3 @@ jobs:
             ## 出力形式
             Markdown形式で、GitHub Issue のコメントとして投稿できる形で回答してください。
             絵文字を使って見やすくし、チェックボックス形式のタスクリストも含めてください。
-
-      - name: Post analysis to issue
-        uses: actions/github-script@v7
-        with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          script: |
-            const analysisResult = `${{ steps.claude-analysis.outputs.conclusion }}`;
-            
-            // Post the analysis comment
-            await github.rest.issues.createComment({
-              owner: context.repo.owner,
-              repo: context.repo.repo,
-              issue_number: context.payload.issue.number,
-              body: analysisResult
-            });

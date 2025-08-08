@@ -24,6 +24,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          allowed_tools: "Bash,View,GlobTool,GrepTool"
           prompt: |
             GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立てて、Issueに実装計画をコメントしてください
   

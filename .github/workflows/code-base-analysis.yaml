@@ -20,7 +20,7 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。
+            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立て、コメントに回答してください。
 
             ## Issue 情報
             **タイトル:** ${{ github.event.issue.title }}

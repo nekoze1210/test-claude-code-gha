@@ -19,7 +19,6 @@ jobs:
         uses: anthropics/claude-code-base-action@beta
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_tools: "Bash(gh:*),View,GlobTool,GrepTool"
           prompt: |
             GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。  
   
@@ -34,8 +33,6 @@ jobs:
             ```bash  
             gh issue comment ${{ github.event.issue.number }} --body "分析結果をここに記述" --repo ${{ github.repository }}
             ```
-
-            重要: curlではなく、必ずghコマンドを使用してください。
 
             ## 分析してほしい内容
             1. **Issue の分類と優先度評価**

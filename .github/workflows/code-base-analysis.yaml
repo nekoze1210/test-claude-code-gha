@@ -25,19 +25,13 @@ jobs:
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
           prompt: |
-            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。  
+            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立てて、Issueに実装計画をコメントしてください
   
             ## Issue 情報  
             **タイトル:** ${{ github.event.issue.title }}  
             **説明:** ${{ github.event.issue.body }}  
             **Issue番号:** ${{ github.event.issue.number }}  
             **リポジトリ:** ${{ github.repository }}  
-        
-            分析完了後、以下のコマンドを使ってIssueにコメントしてください：  
-
-            ```bash  
-            gh issue comment ${{ github.event.issue.number }} --body "分析結果をここに記述" --repo ${{ github.repository }}
-            ```
 
             ## 分析してほしい内容
             1. **Issue の分類と優先度評価**

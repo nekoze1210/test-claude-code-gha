@@ -10,16 +10,20 @@ jobs:
     permissions:
       issues: write
       contents: read
+      id-token: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
 
       - name: Analyze issue with Claude Codebase Action
         id: claude-analysis
         uses: anthropics/claude-code-base-action@beta
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           claude_code_oauth_token: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
-          allowed_tools: "Bash,View,GlobTool,GrepTool"
           prompt: |
             GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。  
   

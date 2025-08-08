@@ -6,7 +6,6 @@ on:
 
 jobs:
   analyze-issue:
-    if: github.event_name == 'issues' && contains(github.event.issue.labels, 'waiting-for-ai')
     runs-on: ubuntu-latest
     permissions:
       issues: write

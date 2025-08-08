@@ -1,0 +1,72 @@
+name: Claude Issue Analysis and Fix Planning
+
+on:
+  issues:
+    types: [opened, labeled]
+
+jobs:
+  analyze-issue:
+    if: github.event_name == 'issues' && contains(github.event.issue.labels, 'waiting-for-ai')
+    runs-on: ubuntu-latest
+    permissions:
+      issues: write
+      contents: read
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Analyze issue with Claude Codebase Action
+        id: claude-analysis
+        uses: anthropics/claude-code-base-action@beta
+        with:
+          anthropic_api_key: ${{ secrets.CLAUDE_CODE_OAUTH_TOKEN }}
+          prompt: |
+            GitHub Issue が作成されました。以下の Issue について詳細な分析と実装計画を立ててください。
+
+            ## Issue 情報
+            **タイトル:** ${{ github.event.issue.title }}
+            
+            **説明:**
+            ${{ github.event.issue.body }}
+
+            ## 分析してほしい内容
+            1. **Issue の分類と優先度評価**
+                - 問題の種類（バグ修正、機能追加、リファクタリング、改善等）
+                - 緊急度・重要度の評価
+                - 影響範囲の特定
+
+            2. **コードベース分析**
+                - 関連するファイル・モジュールの特定
+                - 既存の実装パターンの調査
+                - 依存関係の分析
+                - 類似の実装例の検索
+
+            3. **詳細な実装計画の策定**
+                - 段階的な実装ステップ
+                - 各ステップで変更が必要なファイル
+                - 新規作成が必要なファイル
+                - テスト戦略
+                - 潜在的なリスクと対策
+
+            4. **工数見積もり**
+                - 各フェーズの想定工数
+                - 全体の完了予定時間
+
+            ## 出力形式
+            Markdown形式で、GitHub Issue のコメントとして投稿できる形で回答してください。
+            絵文字を使って見やすくし、チェックボックス形式のタスクリストも含めてください。
+
+      - name: Post analysis to issue
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          script: |
+            const analysisResult = `${{ steps.claude-analysis.outputs.conclusion }}`;
+            
+            // Post the analysis comment
+            await github.rest.issues.createComment({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              issue_number: context.payload.issue.number,
+              body: analysisResult
+            });
